@@ -28,6 +28,10 @@ namespace Realtors
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel PropertyValueChange { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UILabel Summary { get; set; }
 
 		void ReleaseDesignerOutlets ()
@@ -43,6 +47,10 @@ namespace Realtors
 			if (PropertyImage != null) {
 				PropertyImage.Dispose ();
 				PropertyImage = null;
+			}
+			if (PropertyValueChange != null) {
+				PropertyValueChange.Dispose ();
+				PropertyValueChange = null;
 			}
 			if (Summary != null) {
 				Summary.Dispose ();

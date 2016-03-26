@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Globalization;
 using UIKit;
 using System.Threading.Tasks;
 using System.Net.Http;
@@ -36,7 +36,15 @@ namespace Realtors
 
 				this.Address.Text = this.DetailItem.Address;
 				this.Title = this.DetailItem.Address;
-				this.Summary.Text = "Beds: " + this.DetailItem.Beds + ", Baths: " + this.DetailItem.Baths;
+				this.Summary.Text = "Beds: " + this.DetailItem.Beds + ", Baths: " + this.DetailItem.Baths + ", " + string.Format(new CultureInfo("en-US"), "{0:c}", this.DetailItem.EstimatedValue) + ", ";
+				this.PropertyValueChange.Text = Convert.ToString(this.DetailItem.changeOverLastYear);
+
+				if (this.DetailItem.changeOverLastYear < 0) {
+					this.PropertyValueChange.TextColor = UIColor.Red;
+				} else {
+					this.PropertyValueChange.TextColor = UIColor.Green;
+				}
+
 				this.Features.Text = this.DetailItem.Features;
 
 				var taskResult = await this.LoadImage (this.DetailItem.Image);
@@ -50,6 +58,7 @@ namespace Realtors
 			this.Address.Text = string.Empty;
 			this.Summary.Text = string.Empty;
 			this.Features.Text = string.Empty;
+			this.PropertyValueChange.Text = string.Empty;
 			await ConfigureView ();
 		}
 
@@ -68,5 +77,3 @@ namespace Realtors
 		}
 	}
 }
-
-
