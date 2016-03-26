@@ -10,6 +10,7 @@ namespace Realtors
 	public partial class MasterViewController : UITableViewController
 	{
 		public DetailViewController DetailViewController { get; set; }
+		readonly PropertyService PropertyService = new PropertyService();
 
 		DataSource dataSource;
 
@@ -23,20 +24,25 @@ namespace Realtors
 			}
 		}
 
-		public override void ViewDidLoad ()
+		public async override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
 
 			// Perform any additional setup after loading the view, typically from a nib.
 			NavigationItem.LeftBarButtonItem = EditButtonItem;
 
-			var addButton = new UIBarButtonItem (UIBarButtonSystemItem.Add, AddNewItem);
-			addButton.AccessibilityLabel = "addButton";
-			NavigationItem.RightBarButtonItem = addButton;
-
 			DetailViewController = (DetailViewController)((UINavigationController)SplitViewController.ViewControllers [1]).TopViewController;
 
 			TableView.Source = dataSource = new DataSource (this);
+
+			this.dataSource.Properties = new List<Property> ();
+
+			var properties = await this.PropertyService.GetAllPropertyListings();
+			this.dataSource.Properties = properties;
+			this.TableView.ReloadData ();
+
+			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
+				this.DetailViewController.SetDetailItem (properties [0]);
 		}
 
 		public override void DidReceiveMemoryWarning ()
@@ -45,19 +51,11 @@ namespace Realtors
 			// Release any cached data, images, etc that aren't in use.
 		}
 
-		void AddNewItem (object sender, EventArgs args)
-		{
-			dataSource.Objects.Insert (0, DateTime.Now);
-
-			using (var indexPath = NSIndexPath.FromRowSection (0, 0))
-				TableView.InsertRows (new [] { indexPath }, UITableViewRowAnimation.Automatic);
-		}
-
 		public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
 		{
 			if (segue.Identifier == "showDetail") {
 				var indexPath = TableView.IndexPathForSelectedRow;
-				var item = dataSource.Objects [indexPath.Row];
+				var item = dataSource.Properties [indexPath.Row];
 				var controller = (DetailViewController)((UINavigationController)segue.DestinationViewController).TopViewController;
 				controller.SetDetailItem (item);
 				controller.NavigationItem.LeftBarButtonItem = SplitViewController.DisplayModeButtonItem;
@@ -68,7 +66,7 @@ namespace Realtors
 		class DataSource : UITableViewSource
 		{
 			static readonly NSString CellIdentifier = new NSString ("Cell");
-			readonly List<object> objects = new List<object> ();
+			private List<Property> properties;
 			readonly MasterViewController controller;
 
 			public DataSource (MasterViewController controller)
@@ -76,8 +74,9 @@ namespace Realtors
 				this.controller = controller;
 			}
 
-			public IList<object> Objects {
-				get { return objects; }
+			public List<Property> Properties {
+				get { return properties; }
+				set { properties = value; }
 			}
 
 			// Customize the number of sections in the table view.
@@ -88,15 +87,15 @@ namespace Realtors
 
 			public override nint RowsInSection (UITableView tableview, nint section)
 			{
-				return objects.Count;
+				return properties.Count;
 			}
 
 			// Customize the appearance of table view cells.
 			public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
 			{
-				var cell = tableView.DequeueReusableCell (CellIdentifier, indexPath);
+				var cell = tableView.DequeueReusableCell (CellIdentifier, indexPath) as PropertyCell;
 
-				cell.TextLabel.Text = objects [indexPath.Row].ToString ();
+				cell.Property = properties [indexPath.Row];
 
 				return cell;
 			}
@@ -111,7 +110,7 @@ namespace Realtors
 			{
 				if (editingStyle == UITableViewCellEditingStyle.Delete) {
 					// Delete the row from the data source.
-					objects.RemoveAt (indexPath.Row);
+					properties.RemoveAt (indexPath.Row);
 					controller.TableView.DeleteRows (new [] { indexPath }, UITableViewRowAnimation.Fade);
 				} else if (editingStyle == UITableViewCellEditingStyle.Insert) {
 					// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
@@ -121,7 +120,7 @@ namespace Realtors
 			public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
 			{
 				if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
-					controller.DetailViewController.SetDetailItem (objects [indexPath.Row]);
+					controller.DetailViewController.SetDetailItem (properties [indexPath.Row]);
 			}
 		}
 	}

@@ -11,16 +11,12 @@ using UIKit;
 
 namespace Realtors
 {
-	[Register ("DetailViewController")]
-	partial class DetailViewController
+	[Register ("PropertyCell")]
+	partial class PropertyCell
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UILabel Address { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UITextView Features { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -35,10 +31,6 @@ namespace Realtors
 			if (Address != null) {
 				Address.Dispose ();
 				Address = null;
-			}
-			if (Features != null) {
-				Features.Dispose ();
-				Features = null;
 			}
 			if (PropertyImage != null) {
 				PropertyImage.Dispose ();
