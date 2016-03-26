@@ -30,11 +30,12 @@ namespace Realtors
 		{
 			// Update the user interface for the detail item
 			if (IsViewLoaded && DetailItem != null) {
-
+				
 				var result = await PropertyService.GetProperty (this.DetailItem.ListingID);
 				this.DetailItem = result;
 
 				this.Address.Text = this.DetailItem.Address;
+				this.Title = this.DetailItem.Address;
 				this.Summary.Text = "Beds: " + this.DetailItem.Beds + ", Baths: " + this.DetailItem.Baths;
 				this.Features.Text = this.DetailItem.Features;
 

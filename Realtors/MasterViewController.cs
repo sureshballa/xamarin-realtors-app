@@ -16,7 +16,7 @@ namespace Realtors
 
 		public MasterViewController (IntPtr handle) : base (handle)
 		{
-			Title = NSBundle.MainBundle.LocalizedString ("Master", "Master");
+			Title = "Listings";
 			
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
 				PreferredContentSize = new CGSize (320f, 600f);
@@ -27,9 +27,6 @@ namespace Realtors
 		public async override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-
-			// Perform any additional setup after loading the view, typically from a nib.
-			NavigationItem.LeftBarButtonItem = EditButtonItem;
 
 			DetailViewController = (DetailViewController)((UINavigationController)SplitViewController.ViewControllers [1]).TopViewController;
 
