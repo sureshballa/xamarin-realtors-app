@@ -17,20 +17,28 @@ namespace Realtors
 
 		public async Task<List<Property>> GetAllPropertyListings ()
 		{
-			var uri = new Uri ("https://sample-listings.herokuapp.com/listings");
+			var uri = new Uri (ServiceUrl + @"/listings");
 
-			HttpClient client = new HttpClient ();
-			var response = await client.GetAsync (uri);
+			try
+			{
+				HttpClient client = new HttpClient ();
+				var response = await client.GetAsync (uri);
 
-			if (response.IsSuccessStatusCode) {
-				var content = await response.Content.ReadAsStringAsync ();
-				var listings = JsonConvert.DeserializeObject <List<Property>> (content);
+				if (response.IsSuccessStatusCode) {
+					var content = await response.Content.ReadAsStringAsync ();
+					var listings = JsonConvert.DeserializeObject <List<Property>> (content);
 
-				listings.ForEach (l => {
-					l.Image = ServiceUrl + l.Image;
-				});
+					listings.ForEach (l => {
+						l.Image = ServiceUrl + l.Image;
+					});
 
-				return listings;
+					return listings;
+				}
+			}
+			catch 
+			{
+				//Ignore for now
+				return null;
 			}
 
 			return null;
@@ -40,14 +48,22 @@ namespace Realtors
 		{
 			var uri = new Uri (ServiceUrl + @"/listings/" + listingID);
 
-			HttpClient client = new HttpClient ();
-			var response = await client.GetAsync (uri);
+			try
+			{
+				HttpClient client = new HttpClient ();
+				var response = await client.GetAsync (uri);
 
-			if (response.IsSuccessStatusCode) {
-				var content = await response.Content.ReadAsStringAsync ();
-				var property = JsonConvert.DeserializeObject <Property> (content);
-				property.Image = ServiceUrl + property.Image;
-				return property;
+				if (response.IsSuccessStatusCode) {
+					var content = await response.Content.ReadAsStringAsync ();
+					var property = JsonConvert.DeserializeObject <Property> (content);
+					property.Image = ServiceUrl + property.Image;
+					return property;
+				}
+			}
+			catch 
+			{
+				//Ignore for now
+				return null;
 			}
 
 			return null;

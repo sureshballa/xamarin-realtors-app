@@ -90,7 +90,6 @@
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
     <InterfaceDefinition Include="Main.storyboard" />
-    <InterfaceDefinition Include="Main_swift.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -112,13 +111,11 @@
     <Compile Include="PropertyCell.designer.cs">
       <DependentUpon>PropertyCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\UIImageExtensions.cs" />
     <Compile Include="Entities\Property.cs" />
     <Compile Include="Service\PropertyService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Utilities\" />
     <Folder Include="Entities\" />
     <Folder Include="Service\" />
   </ItemGroup>

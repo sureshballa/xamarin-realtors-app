@@ -35,11 +35,15 @@ namespace Realtors
 			this.dataSource.Properties = new List<Property> ();
 
 			var properties = await this.PropertyService.GetAllPropertyListings();
-			this.dataSource.Properties = properties;
-			this.TableView.ReloadData ();
 
-			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
-				this.DetailViewController.SetDetailItem (properties [0]);
+			if (properties != null) {
+				this.dataSource.Properties = properties;
+				this.TableView.ReloadData ();
+			
+
+				if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
+					this.DetailViewController.SetDetailItem (properties [0]);
+			}
 		}
 
 		public override void DidReceiveMemoryWarning ()
